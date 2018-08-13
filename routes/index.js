@@ -59,10 +59,9 @@ router.post('/register', function (req, res) {
       // 3. 返回响应(失败)
       res.send({code: 1, msg: '此用户已存在, 请重新注册'})
     } else {// 此用户不存在 , 可以注册
-      // 向浏览器返回一个cookie数据(实现注册成功后自动登陆了)
-      res.cookie('userid', userDoc._id, {maxAge: 1000*60*60*24*7})
-
       new UserModel({username, password: md5(password), type}).save((error, userDoc) => {
+        // 向浏览器返回一个cookie数据(实现注册成功后自动登陆了)
+        res.cookie('userid', userDoc._id, {maxAge: 1000*60*60*24*7})
         // 3. 返回响应(成功)
         res.json({code: 0, data: {_id: userDoc._id, username, type}})
       })
