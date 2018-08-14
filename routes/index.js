@@ -85,4 +85,24 @@ router.post('/login', function (req, res) {
   })
 })
 
+// 3. 更新用户路由
+router.post('/update', function (req, res) {
+  // 得到请求cookie的userid
+  const userid = req.cookies.userid
+  if(!userid) {// 如果没有, 说明没有登陆, 直接返回提示
+      return res.send({code: 1, msg: '请先登陆'});
+  }
+
+  //更新数据库中对应的数据
+  UserModel.findByIdAndUpdate({_id: userid}, req.body, function (err, user) {// user是数据库中原来的数据
+    const {_id, username, type} = user
+    // node端 ...不可用
+    // const data = {...req.body, _id, username, type}
+    // 合并用户信息
+    const data = Object.assign(req.body, {_id, username, type})
+    // assign(obj1, obj2, obj3,...) // 将多个指定的对象进行合并, 返回一个合并后的对象
+    res.send({code: 0, data})
+  })
+})
+
 module.exports = router;
