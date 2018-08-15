@@ -125,4 +125,14 @@ router.get('/user', function (req, res) {
   })
 })
 
+/*
+查看用户列表(指定类型的)
+ */
+router.get('/userlist',function(req, res){
+  const { type } = req.query
+  UserModel.find({type},filter, function(err,users){
+    return res.json({code:0, data: users})
+  })
+})
+
 module.exports = router;
